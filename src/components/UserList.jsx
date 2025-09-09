@@ -73,142 +73,106 @@ export default function UserList() {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg h-full flex flex-col">
-      <div className="p-6 border-b border-gray-200">
-        <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-          <Users className="w-6 h-6 mr-2 text-blue-500" />
-          Users
-        </h2>
-        
+    <div className="h-full flex flex-col bg-white">
+      <div className="p-3 border-b border-gray-200">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
             type="text"
-            placeholder="Search users..."
+            placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="input-field pl-10"
+            className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-300 focus:border-transparent"
           />
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto">
         {filteredUsers.length === 0 ? (
-          <div className="p-6 text-center text-gray-500">
-            {searchTerm ? 'No users found' : 'No users available'}
-          </div>
+          <div className="p-6 text-center text-gray-500 text-sm">{searchTerm ? 'No users found' : 'No users available'}</div>
         ) : (
-          <div className="p-2">
-            {filteredUsers.map((user) => (
-              <div
-                key={user.uid}
-                onClick={() => setSelectedUser(user)}
-                className={`p-4 rounded-lg cursor-pointer transition-all hover:bg-gray-50 card-hover ${
-                  selectedUser?.uid === user.uid ? 'bg-blue-50 border-2 border-blue-200' : ''
-                }`}
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="relative">
-                    <div className="w-12 h-12 profile-avatar text-lg">
-                      {user.photoURL ? (
-                        <img
-                          src={user.photoURL}
-                          alt="Profile"
-                          className="w-full h-full rounded-full object-cover"
-                        />
-                      ) : (
-                        user.displayName?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase()
-                      )}
+          <ul className="divide-y divide-gray-100">
+            {filteredUsers.map((user) => {
+              const unreadCount = getUnreadCountForUser ? getUnreadCountForUser(user.uid) : 0;
+              return (
+                <li
+                  key={user.uid}
+                  onClick={() => setSelectedUser(user)}
+                  className={`px-3 py-3 cursor-pointer transition-colors hover:bg-gray-50 ${
+                    selectedUser?.uid === user.uid ? 'bg-gray-100' : ''
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                        {user.photoURL ? (
+                          <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-sm font-semibold text-gray-700">
+                            {user.displayName?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                      {isOnline(user.lastSeen) && <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full ring-2 ring-white" />}
                     </div>
-                    {isOnline(user.lastSeen) && (
-                      <Circle className="online-indicator" />
-                    )}
-                    {user.role === 'admin' && (
-                      <Crown className="absolute -top-1 -right-1 w-4 h-4 text-yellow-500" />
-                    )}
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2">
-                      <h3 className="font-semibold text-gray-800 truncate">
-                        {user.displayName || 'Unknown User'}
-                      </h3>
-                      {user.role === 'admin' && (
-                        <span className="px-2 py-1 bg-red-100 text-red-600 text-xs font-medium rounded-full">
-                          Admin
-                        </span>
-                      )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between">
+                        <p className={`truncate text-sm ${unreadCount > 0 ? 'font-semibold text-gray-900' : 'text-gray-800'}`}>
+                          {user.displayName || 'Unknown User'}
+                        </p>
+                        <PreviewTime user={user} />
+                      </div>
+                      <div className="flex items-center justify-between mt-0.5">
+                        <PreviewText user={user} />
+                        {unreadCount > 0 && (
+                          <span className="ml-2 inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full bg-blue-500 text-white text-[10px] font-semibold">
+                            {unreadCount}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-sm text-gray-500 truncate">
-                      @{user.username || 'notset'}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <p className="text-xs text-gray-400">
-                        {isOnline(user.lastSeen) ? 'Online' : `Last seen ${getLastSeenText(user.lastSeen)}`}
-                      </p>
-                      {/* Last message preview */}
-                    </div>
-                    {/* Preview Row */}
-                    <PreviewRow user={user} />
-                    {user.bio && (
-                      <p className="text-xs text-gray-600 truncate mt-1">
-                        {user.bio}
-                      </p>
-                    )}
-                  </div>
 
-                  <button
-                    onClick={(e) => handleFollowToggle(e, user)}
-                    className={`p-2 rounded-lg transition-colors ${
-                      isFollowing(user.uid)
-                        ? 'bg-red-100 text-red-600 hover:bg-red-200'
-                        : 'bg-blue-100 text-blue-600 hover:bg-blue-200'
-                    }`}
-                    title={isFollowing(user.uid) ? 'Unfollow' : 'Follow'}
-                  >
-                    {isFollowing(user.uid) ? (
-                      <UserMinus className="w-4 h-4" />
-                    ) : (
-                      <UserPlus className="w-4 h-4" />
-                    )}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+                    <button
+                      onClick={(e) => handleFollowToggle(e, user)}
+                      className={`px-2 py-1 rounded-md text-xs border transition-colors ${
+                        isFollowing(user.uid)
+                          ? 'border-red-200 text-red-600 hover:bg-red-50'
+                          : 'border-blue-200 text-blue-600 hover:bg-blue-50'
+                      }`}
+                      title={isFollowing(user.uid) ? 'Unfollow' : 'Follow'}
+                    >
+                      {isFollowing(user.uid) ? 'Unfollow' : 'Follow'}
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         )}
       </div>
     </div>
   );
 }
 
-function PreviewRow({ user }) {
+function PreviewText({ user }) {
   const { currentUser } = useAuth();
-  const { getLastMessageForUser, getUnreadCountForUser } = useChat();
+  const { getLastMessageForUser } = useChat();
   const msg = getLastMessageForUser(user.uid);
-  const unread = getUnreadCountForUser(user.uid);
   if (!msg) return null;
   const isMine = msg.senderId === currentUser?.uid;
   const read = (msg.readBy || []).includes(user.uid);
   return (
-    <div className="flex items-center justify-between mt-1">
-      <div className="flex items-center space-x-1 min-w-0">
-        {isMine && (
-          read ? <CheckCheck className="w-3 h-3 text-blue-500" /> : <Check className="w-3 h-3 text-gray-400" />
-        )}
-        <p className="text-xs text-gray-600 truncate max-w-[14rem]">
-          {isMine ? 'You: ' : ''}{msg.text}
-        </p>
-      </div>
-      <div className="flex items-center space-x-2">
-        <span className="text-[10px] text-gray-400">{formatTime(msg.timestamp)}</span>
-        {unread > 0 && (
-          <span className="min-w-[18px] h-[18px] px-1 bg-green-500 text-white text-[10px] font-semibold rounded-full text-center">
-            {unread}
-          </span>
-        )}
-      </div>
+    <div className="flex items-center min-w-0 text-xs text-gray-500">
+      {isMine && (read ? <CheckCheck className="w-3 h-3 text-blue-500 mr-1" /> : <Check className="w-3 h-3 text-gray-400 mr-1" />)}
+      <p className="truncate max-w-[11rem]">{isMine ? 'You: ' : ''}{msg.text}</p>
     </div>
   );
+}
+
+function PreviewTime({ user }) {
+  const { getLastMessageForUser } = useChat();
+  const msg = getLastMessageForUser(user.uid);
+  if (!msg) return <span className="text-[10px] text-gray-400"> </span>;
+  return <span className="text-[10px] text-gray-400">{formatTime(msg.timestamp)}</span>;
 }
 

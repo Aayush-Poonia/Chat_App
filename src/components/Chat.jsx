@@ -90,20 +90,21 @@ export default function Chat() {
 
   return (
     <div className="card h-full flex flex-col">
-      {/* Chat Header */}
-      <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+      {/* Instagram-like Chat Header */}
+      <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div className="relative">
-            <div className="w-12 h-12 profile-avatar text-lg">
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
               {selectedUser.photoURL ? (
                 <img
                   src={selectedUser.photoURL}
                   alt="Profile"
-                  className="w-full h-full rounded-full object-cover"
+                  className="w-full h-full object-cover"
                 />
               ) : (
-                selectedUser.displayName?.charAt(0)?.toUpperCase() || 
-                selectedUser.email?.charAt(0)?.toUpperCase()
+                <span className="text-sm font-semibold text-gray-700">
+                  {selectedUser.displayName?.charAt(0)?.toUpperCase() || selectedUser.email?.charAt(0)?.toUpperCase()}
+                </span>
               )}
             </div>
             {isOnline(selectedUser.lastSeen) && (
@@ -112,7 +113,7 @@ export default function Chat() {
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <h3 className="font-semibold text-gray-800 text-lg">
+              <h3 className="font-semibold text-gray-800 text-sm">
                 {selectedUser.displayName || 'Unknown User'}
               </h3>
               {selectedUser.role === 'admin' && (
@@ -121,25 +122,22 @@ export default function Chat() {
                 </span>
               )}
             </div>
-            <p className="text-sm text-gray-500">
-              @{selectedUser.username || 'notset'}
-            </p>
-            <p className="text-xs text-gray-400">
+            <p className="text-[11px] text-gray-500">
               {isOnline(selectedUser.lastSeen) ? 'Online' : 'Offline'}
             </p>
           </div>
         </div>
         
         <div className="flex items-center space-x-2">
-          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Voice Call">
+          <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Voice Call">
             <Phone className="w-5 h-5 text-gray-500" />
           </button>
-          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Video Call">
+          <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Video Call">
             <Video className="w-5 h-5 text-gray-500" />
           </button>
           <button
             onClick={() => setShowOptions(!showOptions)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 rounded transition-colors"
             title="More options"
           >
             <MoreVertical className="w-5 h-5 text-gray-500" />
@@ -192,15 +190,15 @@ export default function Chat() {
       </div>
 
       {/* Message Input */}
-      <div className="p-6 border-t border-gray-200 bg-white">
-        <form onSubmit={handleSubmit} className="flex items-end space-x-3">
+      <div className="px-4 py-3 border-t border-gray-200 bg-white">
+        <form onSubmit={handleSubmit} className="flex items-end gap-2">
           <div className="flex-1 relative">
             <input
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Type a message..."
-              className="input-field pr-12 py-3 resize-none"
+              className="w-full border border-gray-200 rounded-full py-2.5 pl-4 pr-12 text-sm focus:ring-2 focus:ring-gray-300 focus:border-transparent"
               rows="1"
             />
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
@@ -223,7 +221,7 @@ export default function Chat() {
           <button
             type="submit"
             disabled={!message.trim()}
-            className="btn-primary p-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2.5 bg-black text-white rounded-full text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send className="w-5 h-5" />
           </button>

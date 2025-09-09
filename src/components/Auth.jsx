@@ -38,36 +38,27 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse animation-delay-2000"></div>
-        <div className="absolute top-40 left-40 w-60 h-60 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse animation-delay-4000"></div>
-      </div>
-
-      <div className="glass-effect rounded-3xl shadow-strong w-full max-w-md p-8 fade-in relative z-10">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 profile-avatar text-2xl">
-              <MessageCircle className="w-8 h-8" />
-            </div>
+          <div className="mx-auto w-14 h-14 rounded-full bg-black flex items-center justify-center mb-3">
+            <MessageCircle className="w-7 h-7 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gradient mb-2">
-            {isLogin ? 'Welcome Back' : 'Join ChatApp'}
+          <h1 className="text-2xl font-semibold text-gray-900">
+            {isLogin ? 'Log in to ChatApp' : 'Create your account'}
           </h1>
-          <p className="text-gray-600 text-sm">
-            {isLogin ? 'Sign in to continue your conversations' : 'Create your account and start chatting'}
+          <p className="text-sm text-gray-500 mt-1">
+            {isLogin ? 'Welcome back! Please enter your details.' : 'Join and start messaging instantly.'}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {!isLogin && (
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Full Name</label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
                   name="displayName"
@@ -75,16 +66,16 @@ export default function Auth() {
                   value={formData.displayName}
                   onChange={handleChange}
                   required={!isLogin}
-                  className="input-field pl-10"
+                  className="w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-transparent"
                 />
               </div>
             </div>
           )}
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Email Address</label>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="email"
                 name="email"
@@ -92,15 +83,15 @@ export default function Auth() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="input-field pl-10"
+                className="w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-transparent"
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Password</label>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="password"
@@ -108,12 +99,12 @@ export default function Auth() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="input-field pl-10 pr-12"
+                className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-transparent"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
@@ -123,7 +114,7 @@ export default function Auth() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary py-3 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+            className="w-full bg-black text-white py-3 rounded-lg text-sm font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
           >
             {loading ? (
               <>
@@ -133,53 +124,20 @@ export default function Auth() {
             ) : (
               <>
                 <Sparkles className="w-5 h-5" />
-                <span>{isLogin ? 'Sign In' : 'Create Account'}</span>
+                <span>{isLogin ? 'Log In' : 'Create Account'}</span>
               </>
             )}
           </button>
         </form>
 
-        <div className="mt-8 text-center">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">Or</span>
-            </div>
-          </div>
-          
-          <p className="text-gray-600 text-sm mt-4">
-            {isLogin ? "Don't have an account?" : "Already have an account?"}
-            <button
-              onClick={() => setIsLogin(!isLogin)}
-              className="ml-2 text-gradient font-semibold hover:underline transition-all"
-            >
-              {isLogin ? 'Sign Up' : 'Sign In'}
-            </button>
-          </p>
-        </div>
-
-        {/* Features preview */}
-        <div className="mt-8 grid grid-cols-3 gap-4 text-center">
-          <div className="space-y-2">
-            <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mx-auto">
-              <MessageCircle className="w-4 h-4 text-blue-600" />
-            </div>
-            <p className="text-xs text-gray-600">Real-time Chat</p>
-          </div>
-          <div className="space-y-2">
-            <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mx-auto">
-              <User className="w-4 h-4 text-purple-600" />
-            </div>
-            <p className="text-xs text-gray-600">User Profiles</p>
-          </div>
-          <div className="space-y-2">
-            <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mx-auto">
-              <Sparkles className="w-4 h-4 text-green-600" />
-            </div>
-            <p className="text-xs text-gray-600">Modern UI</p>
-          </div>
+        <div className="mt-6 text-center text-sm text-gray-600">
+          {isLogin ? "Don't have an account?" : "Already have an account?"}
+          <button
+            onClick={() => setIsLogin(!isLogin)}
+            className="ml-2 font-medium text-black hover:opacity-80"
+          >
+            {isLogin ? 'Sign Up' : 'Log In'}
+          </button>
         </div>
       </div>
     </div>

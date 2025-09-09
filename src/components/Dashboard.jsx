@@ -121,17 +121,24 @@ export default function Dashboard() {
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden bg-white">
         {/* Sidebar */}
-        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-          fixed lg:relative lg:translate-x-0 z-30 lg:z-auto
-          w-80 lg:w-96 h-full bg-white border-r border-gray-200 
-          transition-transform duration-300 ease-in-out lg:transition-none`}>
-          <UserList />
+        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed lg:relative lg:translate-x-0 z-30 lg:z-auto w-80 lg:w-96 h-full border-r border-gray-200 transition-transform duration-300 ease-in-out lg:transition-none bg-white`}
+        >
+          {/* Instagram-like left sidebar container */}
+          <div className="h-full flex flex-col">
+            <div className="px-4 py-3 border-b border-gray-200">
+              <h2 className="text-lg font-semibold">Messages</h2>
+              <p className="text-xs text-gray-500">Direct</p>
+            </div>
+            <div className="flex-1 overflow-y-auto">
+              <UserList />
+            </div>
+          </div>
         </div>
 
         {/* Chat Area */}
-        <div className="flex-1 p-4">
+        <div className="flex-1 p-0 lg:p-4 bg-gray-50">
           <Chat />
         </div>
       </div>
