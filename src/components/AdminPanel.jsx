@@ -231,3 +231,4 @@ export default function AdminPanel({ isOpen, onClose, currentUser }) {
     </div>
   );
 }
+
