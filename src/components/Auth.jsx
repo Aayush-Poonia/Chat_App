@@ -58,57 +58,57 @@ export default function Auth() {
           {!isLogin && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-              <div className="relative">
+            <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  name="displayName"
+              <input
+                type="text"
+                name="displayName"
                   placeholder="Enter your full name"
-                  value={formData.displayName}
-                  onChange={handleChange}
-                  required={!isLogin}
+                value={formData.displayName}
+                onChange={handleChange}
+                required={!isLogin}
                   className="w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-transparent"
-                />
+              />
               </div>
             </div>
           )}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-            <div className="relative">
+          <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="email"
-                name="email"
+            <input
+              type="email"
+              name="email"
                 placeholder="Enter your email"
-                value={formData.email}
-                onChange={handleChange}
-                required
+              value={formData.email}
+              onChange={handleChange}
+              required
                 className="w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-transparent"
-              />
+            />
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <div className="relative">
+          <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name="password"
                 placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
-                required
+              value={formData.password}
+              onChange={handleChange}
+              required
                 className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-transparent"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-              </button>
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
             </div>
           </div>
 
