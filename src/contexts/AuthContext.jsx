@@ -4,7 +4,8 @@ import {
   signInWithEmailAndPassword, 
   signOut, 
   onAuthStateChanged,
-  updateProfile
+  updateProfile,
+  sendPasswordResetEmail
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { auth, db } from '../firebase/config';
@@ -65,13 +66,34 @@ export function AuthProvider({ children }) {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       
-      // Update last seen
-      await updateDoc(doc(db, 'users', result.user.uid), {
+      // Ensure user document exists and update last seen
+      const userRef = doc(db, 'users', result.user.uid);
+      await setDoc(userRef, {
+        uid: result.user.uid,
+        email: result.user.email,
+        displayName: result.user.displayName || result.user.email?.split('@')[0] || 'User',
+        username: (result.user.displayName || result.user.email || 'user')
+          .toLowerCase()
+          .replace(/\s+/g, ''),
+        photoURL: result.user.photoURL || '',
+        role: 'user',
+        followers: [],
+        following: [],
         lastSeen: new Date().toISOString()
-      });
+      }, { merge: true });
       
       toast.success('Logged in successfully!');
       return result;
+    } catch (error) {
+      toast.error(error.message);
+      throw error;
+    }
+  }
+
+  async function resetPassword(email) {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast.success('Password reset email sent. Check your inbox.');
     } catch (error) {
       toast.error(error.message);
       throw error;
@@ -193,7 +215,8 @@ export function AuthProvider({ children }) {
     getUserData,
     followUser,
     unfollowUser,
-    updateUserProfile
+    updateUserProfile,
+    resetPassword
   };
 
   return (

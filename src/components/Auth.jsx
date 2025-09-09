@@ -11,7 +11,7 @@ export default function Auth() {
     displayName: ''
   });
   const [loading, setLoading] = useState(false);
-  const { login, signup } = useAuth();
+  const { login, signup, resetPassword } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
@@ -130,14 +130,26 @@ export default function Auth() {
           </button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-gray-600">
-          {isLogin ? "Don't have an account?" : "Already have an account?"}
+        <div className="mt-4 flex items-center justify-between text-sm">
           <button
-            onClick={() => setIsLogin(!isLogin)}
-            className="ml-2 font-medium text-black hover:opacity-80"
+            type="button"
+            onClick={async () => {
+              if (!formData.email) return;
+              try { await resetPassword(formData.email); } catch {}
+            }}
+            className="text-gray-600 hover:text-gray-900"
           >
-            {isLogin ? 'Sign Up' : 'Log In'}
+            Forgot password?
           </button>
+          <div className="text-gray-600">
+            {isLogin ? "Don't have an account?" : "Already have an account?"}
+            <button
+              onClick={() => setIsLogin(!isLogin)}
+              className="ml-2 font-medium text-black hover:opacity-80"
+            >
+              {isLogin ? 'Sign Up' : 'Log In'}
+            </button>
+          </div>
         </div>
       </div>
     </div>

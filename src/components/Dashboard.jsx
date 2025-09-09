@@ -87,14 +87,14 @@ export default function Dashboard() {
             <div className="hidden sm:flex items-center space-x-3">
               <div className="text-right">
                 <div className="flex items-center space-x-2">
-                  <p className="text-sm font-medium text-gray-800">
-                    {currentUser?.displayName || 'User'}
-                  </p>
+              <p className="text-sm font-medium text-gray-800">
+                {currentUser?.displayName || 'User'}
+              </p>
                   {isAdmin && <Crown className="w-4 h-4 text-yellow-500" />}
                 </div>
                 <p className="text-xs text-gray-500">@{currentUser?.username || 'notset'}</p>
-              </div>
-              
+            </div>
+            
               <div className="w-10 h-10 profile-avatar text-lg">
                 {currentUser?.photoURL ? (
                   <img
@@ -132,7 +132,7 @@ export default function Dashboard() {
               <p className="text-xs text-gray-500">Direct</p>
             </div>
             <div className="flex-1 overflow-y-auto">
-              <UserList />
+          <UserList />
             </div>
           </div>
         </div>
