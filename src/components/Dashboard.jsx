@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useChat } from '../contexts/ChatContext';
 import UserList from './UserList';
@@ -24,6 +24,15 @@ export default function Dashboard() {
   };
 
   const isAdmin = currentUser?.role === 'admin';
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (dark) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [dark]);
 
   return (
     <div className={`h-screen flex flex-col ${dark ? 'dark' : ''}`}>
