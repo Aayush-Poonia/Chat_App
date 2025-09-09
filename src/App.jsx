@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ChatProvider } from './contexts/ChatContext';
 import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
+import ForgotPassword from './components/ForgotPassword';
 
 function ProtectedRoute({ children }) {
   const { currentUser } = useAuth();
@@ -26,6 +27,14 @@ function AppContent() {
             element={
               <PublicRoute>
                 <Auth />
+              </PublicRoute>
+            } 
+          />
+          <Route 
+            path="/forgot-password" 
+            element={
+              <PublicRoute>
+                <ForgotPassword />
               </PublicRoute>
             } 
           />

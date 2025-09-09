@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Mail, Lock, User, Eye, EyeOff, MessageCircle, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -131,16 +132,9 @@ export default function Auth() {
         </form>
 
         <div className="mt-4 flex items-center justify-between text-sm">
-          <button
-            type="button"
-            onClick={async () => {
-              if (!formData.email) return;
-              try { await resetPassword(formData.email); } catch {}
-            }}
-            className="text-gray-600 hover:text-gray-900"
-          >
+          <Link to="/forgot-password" className="text-gray-600 hover:text-gray-900">
             Forgot password?
-          </button>
+          </Link>
           <div className="text-gray-600">
             {isLogin ? "Don't have an account?" : "Already have an account?"}
             <button
