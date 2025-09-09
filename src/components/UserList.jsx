@@ -14,14 +14,20 @@ export default function UserList() {
   useEffect(() => {
     const usersQuery = query(collection(db, 'users'), orderBy('lastSeen', 'desc'));
     
-    const unsubscribe = onSnapshot(usersQuery, (snapshot) => {
-      const usersData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })).filter(user => user.uid !== currentUser?.uid);
-      
-      setUsers(usersData);
-    });
+    const unsubscribe = onSnapshot(
+      usersQuery,
+      (snapshot) => {
+        const usersData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })).filter(user => user.uid !== currentUser?.uid);
+        setUsers(usersData);
+      },
+      (error) => {
+        console.error('UserList subscription error:', error);
+        setUsers([]);
+      }
+    );
 
     return () => unsubscribe();
   }, [currentUser]);

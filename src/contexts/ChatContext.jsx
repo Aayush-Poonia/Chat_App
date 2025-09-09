@@ -45,10 +45,17 @@ export function ChatProvider({ children }) {
       orderBy('timestamp', 'asc')
     );
 
-    const unsubAll = onSnapshot(allQuery, (snapshot) => {
-      const msgs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-      setAllMessages(msgs);
-    });
+    const unsubAll = onSnapshot(
+      allQuery,
+      (snapshot) => {
+        const msgs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        setAllMessages(msgs);
+      },
+      (error) => {
+        console.error('Messages subscription error:', error);
+        setAllMessages([]);
+      }
+    );
 
     return () => unsubAll();
   }, [currentUser]);
@@ -65,20 +72,27 @@ export function ChatProvider({ children }) {
       orderBy('timestamp', 'asc')
     );
 
-    const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
-      const allMessages = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+    const unsubscribe = onSnapshot(
+      messagesQuery,
+      (snapshot) => {
+        const allMessages = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
 
-      // Filter messages between current user and selected user
-      const conversationMessages = allMessages.filter(msg => 
-        (msg.senderId === currentUser.uid && msg.receiverId === selectedUser.uid) ||
-        (msg.senderId === selectedUser.uid && msg.receiverId === currentUser.uid)
-      );
+        // Filter messages between current user and selected user
+        const conversationMessages = allMessages.filter(msg => 
+          (msg.senderId === currentUser.uid && msg.receiverId === selectedUser.uid) ||
+          (msg.senderId === selectedUser.uid && msg.receiverId === currentUser.uid)
+        );
 
-      setMessages(conversationMessages);
-    });
+        setMessages(conversationMessages);
+      },
+      (error) => {
+        console.error('Conversation subscription error:', error);
+        setMessages([]);
+      }
+    );
 
     return () => unsubscribe();
   }, [currentUser, selectedUser]);

@@ -196,8 +196,13 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userData = await getUserData(user.uid);
-        setCurrentUser({ ...user, ...userData });
+        try {
+          const userData = await getUserData(user.uid);
+          // Guard against null to avoid runtime spread errors in production
+          setCurrentUser({ ...user, ...(userData || {}) });
+        } catch (e) {
+          setCurrentUser(user);
+        }
       } else {
         setCurrentUser(null);
       }
