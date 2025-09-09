@@ -9,6 +9,7 @@ import { LogOut, Menu, X, MessageCircle, User, Settings, Shield, Crown } from 'l
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [dark, setDark] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const { currentUser, logout } = useAuth();
@@ -25,7 +26,7 @@ export default function Dashboard() {
   const isAdmin = currentUser?.role === 'admin';
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className={`h-screen flex flex-col ${dark ? 'dark' : ''}`}>
       {/* Header */}
       <header className="glass-effect border-b border-gray-200 px-4 py-3">
         <div className="flex items-center justify-between">
@@ -67,6 +68,19 @@ export default function Dashboard() {
               title="Profile"
             >
               <User className="w-5 h-5 text-gray-600" />
+            </button>
+
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={() => setDark(v => !v)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              title="Toggle theme"
+            >
+              {dark ? (
+                <span className="text-sm text-gray-700">Light</span>
+              ) : (
+                <span className="text-sm text-gray-700">Dark</span>
+              )}
             </button>
 
             {/* User Info */}

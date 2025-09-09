@@ -3,7 +3,7 @@ import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useAuth } from '../contexts/AuthContext';
 import { useChat } from '../contexts/ChatContext';
-import { Users, Search, Circle, UserPlus, UserMinus, Crown } from 'lucide-react';
+import { Users, Search, Circle, UserPlus, UserMinus, Crown, Check, CheckCheck } from 'lucide-react';
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
@@ -64,6 +64,12 @@ export default function UserList() {
     } else {
       followUser(user.uid);
     }
+  };
+
+  const formatTime = (timestamp) => {
+    if (!timestamp) return '';
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
   return (
@@ -136,9 +142,14 @@ export default function UserList() {
                     <p className="text-sm text-gray-500 truncate">
                       @{user.username || 'notset'}
                     </p>
-                    <p className="text-xs text-gray-400">
-                      {isOnline(user.lastSeen) ? 'Online' : `Last seen ${getLastSeenText(user.lastSeen)}`}
-                    </p>
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs text-gray-400">
+                        {isOnline(user.lastSeen) ? 'Online' : `Last seen ${getLastSeenText(user.lastSeen)}`}
+                      </p>
+                      {/* Last message preview */}
+                    </div>
+                    {/* Preview Row */}
+                    <PreviewRow user={user} />
                     {user.bio && (
                       <p className="text-xs text-gray-600 truncate mt-1">
                         {user.bio}
@@ -165,6 +176,36 @@ export default function UserList() {
               </div>
             ))}
           </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function PreviewRow({ user }) {
+  const { currentUser } = useAuth();
+  const { getLastMessageForUser, getUnreadCountForUser } = useChat();
+  const msg = getLastMessageForUser(user.uid);
+  const unread = getUnreadCountForUser(user.uid);
+  if (!msg) return null;
+  const isMine = msg.senderId === currentUser?.uid;
+  const read = (msg.readBy || []).includes(user.uid);
+  return (
+    <div className="flex items-center justify-between mt-1">
+      <div className="flex items-center space-x-1 min-w-0">
+        {isMine && (
+          read ? <CheckCheck className="w-3 h-3 text-blue-500" /> : <Check className="w-3 h-3 text-gray-400" />
+        )}
+        <p className="text-xs text-gray-600 truncate max-w-[14rem]">
+          {isMine ? 'You: ' : ''}{msg.text}
+        </p>
+      </div>
+      <div className="flex items-center space-x-2">
+        <span className="text-[10px] text-gray-400">{formatTime(msg.timestamp)}</span>
+        {unread > 0 && (
+          <span className="min-w-[18px] h-[18px] px-1 bg-green-500 text-white text-[10px] font-semibold rounded-full text-center">
+            {unread}
+          </span>
         )}
       </div>
     </div>

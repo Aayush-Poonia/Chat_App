@@ -7,7 +7,7 @@ export default function Chat() {
   const [message, setMessage] = useState('');
   const [showOptions, setShowOptions] = useState(false);
   const messagesEndRef = useRef(null);
-  const { messages, selectedUser, sendMessage } = useChat();
+  const { messages, selectedUser, sendMessage, markConversationRead } = useChat();
   const { currentUser } = useAuth();
 
   const scrollToBottom = () => {
@@ -17,6 +17,14 @@ export default function Chat() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Mark conversation as read when messages change or user switches
+  useEffect(() => {
+    if (selectedUser && typeof markConversationRead === 'function') {
+      const id = setTimeout(() => markConversationRead(selectedUser.uid), 100);
+      return () => clearTimeout(id);
+    }
+  }, [selectedUser, messages, markConversationRead]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
